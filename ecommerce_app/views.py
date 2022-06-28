@@ -4,11 +4,13 @@ from rest_framework.generics import (ListCreateAPIView, ListAPIView,
 from .models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer
 from .permissions import ProductOwnerOrReadOnly, IsOnlyAdminUser
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 class ProductListAV(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
 
 class ProductCreateAV(CreateAPIView):
     serializer_class = ProductSerializer
