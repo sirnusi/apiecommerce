@@ -5,11 +5,14 @@ from .models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer
 from .permissions import ProductOwnerOrReadOnly, IsOnlyAdminUser
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 class ProductListAV(ListAPIView):
     serializer_class = ProductSerializer
     #permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category', 'price']
     
     def get_queryset(self):
         owner = self.request.user

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ecommerce_app',
     'rest_framework', 
+    'django_filters'
     
 ]
 
