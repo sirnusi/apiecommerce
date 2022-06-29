@@ -8,9 +8,12 @@ from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 class ProductListAV(ListAPIView):
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        owner = self.request.user
+        return Product.objects.filter(owner=owner)
 
 class ProductCreateAV(CreateAPIView):
     serializer_class = ProductSerializer
