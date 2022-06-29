@@ -16,7 +16,7 @@ class Product(models.Model):
                                 related_name='category')
     description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    price = models.FloatField()
+    price = models.PositiveIntegerField()
     image = models.ImageField(upload_to='images')
     
     def __str__(self):
