@@ -9,10 +9,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 class ProductListAV(ListAPIView):
+    #queryset = Product.objects.all()
     serializer_class = ProductSerializer
     #permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['category', 'price']
+    filterset_fields = ['category__name', 'price']
     
     def get_queryset(self):
         owner = self.request.user
