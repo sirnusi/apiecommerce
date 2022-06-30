@@ -4,6 +4,7 @@ from rest_framework.generics import (ListCreateAPIView, ListAPIView,
 from .models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer
 from .permissions import ProductOwnerOrReadOnly, IsOnlyAdminUser
+from .pagination import ProductListPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
@@ -12,6 +13,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 class ProductListAV(ListAPIView):
     #queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    pagination_class = ProductListPagination
     #permission_classes = [IsAuthenticated]
     filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
     filterset_fields = ['category__name', 'price']
