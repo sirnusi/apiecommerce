@@ -18,7 +18,7 @@ class ProductListAV(ListAPIView):
     filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
     filterset_fields = ['category__name', 'price']
     search_fields = ['name']
-    ordering_fields = ['price']
+    #ordering_fields = ['price']
     
     
     def get_queryset(self):
