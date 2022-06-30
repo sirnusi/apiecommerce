@@ -67,3 +67,10 @@ class ReviewListAV(ListAPIView):
 
 class ReviewCreateAV(CreateAPIView):
     serializer_class = ReviewSerializer
+    
+    def perform_create(self, serializer):
+        pk=self.kwargs.get('pk')
+        product = Product.objects.filter(pk=pk)
+        
+        return Review.objects.filter(product=product)
+        
