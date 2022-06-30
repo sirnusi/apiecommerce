@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.generics import (ListCreateAPIView, ListAPIView, 
                                      CreateAPIView, RetrieveUpdateDestroyAPIView)
-from .models import Product, Category
-from .serializers import ProductSerializer, CategorySerializer
+from .models import Product, Category, Review
+from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer
 from .permissions import ProductOwnerOrReadOnly, IsOnlyAdminUser
 from .pagination import ProductListPagination
 from rest_framework.permissions import IsAuthenticated
@@ -58,3 +58,12 @@ class CategoryDetailAV(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOnlyAdminUser]
 
 
+class ReviewListAV(ListAPIView):
+    serializer_class = ReviewSerializer
+    
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return Review.objects.filter(product=pk)
+
+class ReviewCreateAV(CreateAPIView):
+    serializer_class = ReviewSerializer
