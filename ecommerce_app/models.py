@@ -18,7 +18,9 @@ class Product(models.Model):
     description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     price = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(default=1)
     image = models.ImageField(upload_to='images')
+    created = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.name
