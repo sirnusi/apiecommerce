@@ -73,4 +73,6 @@ class ReviewCreateAV(CreateAPIView):
         product = Product.objects.filter(pk=pk)
         
         return Review.objects.filter(product=product)
-        
+
+class ReviewDetailAV(RetrieveUpdateDestroyAPIView):
+    pass
