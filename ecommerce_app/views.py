@@ -75,4 +75,6 @@ class ReviewCreateAV(CreateAPIView):
         return Review.objects.filter(product=product)
 
 class ReviewDetailAV(RetrieveUpdateDestroyAPIView):
-    pass
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsOnlyAdminUser]
