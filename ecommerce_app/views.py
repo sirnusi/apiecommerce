@@ -43,7 +43,13 @@ class ProductDetailAV(RetrieveUpdateDestroyAPIView):
         return Product.objects.all()
 
     def perform_update(self, serializer):
+        pk = self.kwargs.get('pk')
+        product = Product.objects.get(pk=pk)
         
+        if product.quantity == 1:
+            return product.price
+        else:
+            return sum(product.price)
         pass
         
 
