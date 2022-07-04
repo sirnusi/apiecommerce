@@ -24,7 +24,7 @@ class Product(models.Model):
         return self.name
 
 class Review(models.Model):
-    rating = models.PositiveIntegerField(validators=[(MinValueValidator(1), MaxValueValidator(5))])
+    rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     description = models.CharField(max_length=500)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product')
