@@ -49,7 +49,7 @@ class ProductDetailAV(RetrieveUpdateDestroyAPIView):
         if product.quantity == 1:
             return product.price
         else:
-            return sum(product.price)
+            return product.price + product.price
         pass
         
 
