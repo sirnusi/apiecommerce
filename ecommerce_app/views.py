@@ -1,21 +1,16 @@
 from django.shortcuts import render
-from rest_framework.generics import (ListCreateAPIView, ListAPIView, 
-                                     CreateAPIView, RetrieveUpdateDestroyAPIView)
-from .models import Product, Category, Review
-from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer
-from .permissions import ProductOwnerOrReadOnly, IsOnlyAdminUser
-from .pagination import ProductListPagination
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework import generics, filters
+from . import models, serializers, pagination, permissions
+
 from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 class ProductListAV(ListAPIView):
-    #queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    pagination_class = ProductListPagination
-    #permission_classes = [IsAuthenticated]
-    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
+    
+    serializer_class = serializers.ProductSerializer
+    pagination_class = pagination.ProductListPagination
+    
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filterset_fields = ['category__name', 'price']
     search_fields = ['name']
     ordering_fields = ['price']
@@ -23,28 +18,28 @@ class ProductListAV(ListAPIView):
     
     def get_queryset(self):
         owner = self.request.user
-        return Product.objects.filter(owner=owner)
+        return models.Product.objects.filter(owner=owner)
 
 class ProductCreateAV(CreateAPIView):
-    serializer_class = ProductSerializer
+    serializer_class = serializers.ProductSerializer
     
     def get_queryset(self):
-        return Product.objects.all()
+        return models.Product.objects.all()
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
    
 class ProductDetailAV(RetrieveUpdateDestroyAPIView):
-    #queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    permission_classes = [ProductOwnerOrReadOnly]
+    
+    serializer_class = serializers.ProductSerializer
+    permission_classes = [permissions.ProductOwnerOrReadOnly]
     
     def get_queryset(self):
-        return Product.objects.all()
+        return models.Product.objects.all()
 
     def perform_update(self, serializer):
         pk = self.kwargs.get('pk')
-        product = Product.objects.get(pk=pk)
+        product = models.Product.objects.get(pk=pk)
         
         if product.quantity == 1:
             return product.price
