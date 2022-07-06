@@ -36,39 +36,39 @@ class ProductDetailAV(generics.RetrieveUpdateDestroyAPIView):
     
 
 class CategoryListAV(generics.ListAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+    queryset = models.Category.objects.all()
+    serializer_class = serializers.CategorySerializer
     
 
 class CategoryCreateAV(generics.CreateAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [IsOnlyAdminUser]
+    queryset = models.Category.objects.all()
+    serializer_class = serializers.CategorySerializer
+    permission_classes = [permissions.IsOnlyAdminUser]
 
 
 class CategoryDetailAV(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [IsOnlyAdminUser]
+    queryset = models.Category.objects.all()
+    serializer_class = serializers.CategorySerializer
+    permission_classes = [permissions.IsOnlyAdminUser]
 
 
-class ReviewListAV(genrics.ListAPIView):
-    serializer_class = ReviewSerializer
+class ReviewListAV(generics.ListAPIView):
+    serializer_class = serializers.ReviewSerializer
     
     def get_queryset(self):
         pk = self.kwargs['pk']
-        return Review.objects.filter(product=pk)
+        return models.Review.objects.filter(product=pk)
 
 class ReviewCreateAV(generics.CreateAPIView):
-    serializer_class = ReviewSerializer
+    serializer_class = serializers.ReviewSerializer
     
     def perform_create(self, serializer):
         pk=self.kwargs.get('pk')
-        product = Product.objects.filter(pk=pk)
+        product = models.Product.objects.filter(pk=pk)
         
-        return Review.objects.filter(product=product)
+        return models.Review.objects.filter(product=product)
 
 class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
-    permission_classes = [IsOnlyAdminUser]
+    queryset = models.Review.objects.all()
+    serializer_class = serializers.ReviewSerializer
+    permission_classes = [permissions.IsOnlyAdminUser]
