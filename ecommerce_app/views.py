@@ -5,7 +5,7 @@ from . import models, serializers, pagination, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
-class ProductListAV(ListAPIView):
+class ProductListAV(generics.ListAPIView):
     
     serializer_class = serializers.ProductSerializer
     pagination_class = pagination.ProductListPagination
@@ -20,7 +20,7 @@ class ProductListAV(ListAPIView):
         owner = self.request.user
         return models.Product.objects.filter(owner=owner)
 
-class ProductCreateAV(CreateAPIView):
+class ProductCreateAV(generics.CreateAPIView):
     serializer_class = serializers.ProductSerializer
     
     def get_queryset(self):
@@ -29,51 +29,37 @@ class ProductCreateAV(CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
    
-class ProductDetailAV(RetrieveUpdateDestroyAPIView):
-    
+class ProductDetailAV(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.Product.objects.all()
     serializer_class = serializers.ProductSerializer
     permission_classes = [permissions.ProductOwnerOrReadOnly]
     
-    def get_queryset(self):
-        return models.Product.objects.all()
 
-    def perform_update(self, serializer):
-        pk = self.kwargs.get('pk')
-        product = models.Product.objects.get(pk=pk)
-        
-        if product.quantity == 1:
-            return product.price
-        else:
-            product.price += product.price
-            return product.price
-        pass
-        
-
-class CategoryListAV(ListAPIView):
+class CategoryListAV(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     
 
-class CategoryCreateAV(CreateAPIView):
+class CategoryCreateAV(generics.CreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsOnlyAdminUser]
 
 
-class CategoryDetailAV(RetrieveUpdateDestroyAPIView):
+class CategoryDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsOnlyAdminUser]
 
 
-class ReviewListAV(ListAPIView):
+class ReviewListAV(genrics.ListAPIView):
     serializer_class = ReviewSerializer
     
     def get_queryset(self):
         pk = self.kwargs['pk']
         return Review.objects.filter(product=pk)
 
-class ReviewCreateAV(CreateAPIView):
+class ReviewCreateAV(generics.CreateAPIView):
     serializer_class = ReviewSerializer
     
     def perform_create(self, serializer):
@@ -82,7 +68,7 @@ class ReviewCreateAV(CreateAPIView):
         
         return Review.objects.filter(product=product)
 
-class ReviewDetailAV(RetrieveUpdateDestroyAPIView):
+class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsOnlyAdminUser]
