@@ -19,7 +19,7 @@ class Product(models.Model):
     description = models.TextField()
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL)
     price = models.PositiveIntegerField()
-   
+    quantity = models.PositiveIntegerField(default=1)
     active = models.BooleanField(default=False)
     image = models.ImageField(upload_to='images')
     created = models.DateTimeField(auto_now_add=True)
@@ -37,19 +37,11 @@ class Review(models.Model):
     def __str__(self):
         return str(self.rating) | self.product.name
 
-class Order(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
-    complete = models.BooleanField(default=False, null=True, blank=False)
-    transaction_id = models.CharField(max_length=100)
-    
-    def __str__(self):
-        return str(self.id)
 
-class OrderItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL)
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL)
-    quantity = models.PositiveIntegerField(default=0)
+class Cart(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCASDE, related_name='carts')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
     created = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
