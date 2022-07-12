@@ -64,11 +64,24 @@ class ReviewCreateAV(generics.CreateAPIView):
     
     def perform_create(self, serializer):
         pk=self.kwargs.get('pk')
+        customer = self.request.user
         product = models.Product.objects.filter(pk=pk)
         
-        return models.Review.objects.filter(product=product)
+        return models.Review.objects.filter(product=product, customer=customer)
 
 class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
     permission_classes = [permissions.IsOnlyAdminUser]
+
+class OrderItemListAV(generics.ListCreateAPIView):
+    queryset = models.OrderItem.objects.all()
+    serializer_class = serializers.OrderItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+
+class OrderItemDetailAV(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.OrderItem.objects.all()
+    serializer_class = serializers.OrderItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
+  

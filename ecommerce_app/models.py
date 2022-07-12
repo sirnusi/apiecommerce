@@ -7,6 +7,7 @@ class Customer(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     
+    
 
     def __str__(self):
         return self.name
@@ -46,23 +47,24 @@ class Review(models.Model):
     def __str__(self):
         return str(self.rating) | self.product.name
 
-# class Order(models.Model):
-#     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
-#     created = models.DateTimeField(auto_now_add=True)
-#     complete = models.BooleanField(default=False, null=True, blank=False)
-#     transaction_id = models.CharField(max_length=100)
+class Order(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, 
+                                 blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    complete = models.BooleanField(default=False, null=True, blank=False)
+    transaction_id = models.CharField(max_length=100)
     
-#     def __str__(self):
-#         return str(self.id)
+    def __str__(self):
+        return str(self.id)
 
-# class OrderItem(models.Model):
-#     product = models.ForeignKey(Product, on_delete=models.SET_NULL)
-#     order = models.ForeignKey(Order, on_delete=models.SET_NULL)
-#     quantity = models.PositiveIntegerField(default=0)
-#     created = models.DateTimeField(auto_now_add=True)
+class OrderItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL)
+    quantity = models.PositiveIntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
     
-#     def __str__(self):
-#         return self.product.name
+    def __str__(self):
+        return self.product.name
 
 # class ShippingAddress(models.Model):
 #     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL)

@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import Product, Category, Review
+from . import models
 
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField(read_only=True)
 
     class Meta:
-        model = Product
+        model = models.Product
         exclude = ['owner']
 
 
@@ -14,7 +14,7 @@ class CategorySerializer(serializers.ModelSerializer):
     category = ProductSerializer(many=True, read_only=True)
     
     class Meta:
-        model = Category
+        model = models.Category
         fields = "__all__"
         
 class ReviewSerializer(serializers.ModelSerializer):
@@ -22,5 +22,20 @@ class ReviewSerializer(serializers.ModelSerializer):
     product = ProductSerializer(many=True, read_only=True)
     
     class Meta:
-        model = Review
+        model = models.Review
         fields = "__all__"
+
+class OrderSerializers(serializers.ModelSerializer):
+    
+    class Meta:
+        model = models.Order
+        fields = "__all__"
+        
+
+class OrderItemSerializers(serializers.ModelSerializer):
+    
+    class Meta:
+        model = models.OrderItem
+        fields = "__all__"
+    
+    
