@@ -14,7 +14,7 @@ urlpatterns = [
     path('review/<int:pk>/create', views.ReviewCreateAV.as_view(), name='review-create'),
     path('review/<int:pk>/details', views.ReviewDetailAV.as_view(), name='review-details'),
     
-    path('customer/cart/', views.OrderItemListAV.as_view(), name='orderitem-list'),
+    #path('customer/cart/', views.OrderItemListAV.as_view(), name='orderitem-list'),
     
     
 ]

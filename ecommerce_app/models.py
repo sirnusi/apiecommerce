@@ -17,7 +17,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, 
                                 related_name='category')
     description = models.TextField()
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     price = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField(default=1)
     active = models.BooleanField(default=False)
@@ -39,7 +39,7 @@ class Review(models.Model):
 
 
 class Cart(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCASDE, related_name='carts')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='carts')
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     created = models.DateTimeField(auto_now_add=True)

@@ -24,18 +24,3 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Review
         fields = "__all__"
-
-class OrderSerializers(serializers.ModelSerializer):
-    
-    class Meta:
-        model = models.Order
-        fields = "__all__"
-        
-
-class OrderItemSerializers(serializers.ModelSerializer):
-    
-    class Meta:
-        model = models.OrderItem
-        fields = "__all__"
-    
-    

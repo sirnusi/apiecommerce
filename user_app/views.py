@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from .serializers import RegistrationSerializer
-from rest_framework.decorators import api_view
+from rest_framework import decorators, response, status
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.response import Response
+
 
 # Create your views here.
-@api_view(['POST'])
+@decorators.api_view(['POST'])
 def registration_view(request):
     
     if request.method == 'POST':
@@ -28,4 +28,4 @@ def registration_view(request):
         else:
             data = serializer.errors
                 
-        return Response(data)
+        return response.Response(data, status=status.HTTP_201_CREATED)
