@@ -1,4 +1,5 @@
 from rest_framework import status, test
+from rest_framework_simplejwt import tokens
 from django.urls import reverse
 from . import models
 from django.contrib.auth.models import User
@@ -31,4 +32,28 @@ class CategoryTestCase(test.APITestCase):
         
 
 class ProductTestCase(test.APITestCase):
-    pass
+    
+    def setUp(self):
+        self.user = User.objects.create_user(username='sirnusi', password='Newpassword123')
+        self.category = models.Category.objects.create(name='Food')
+        self.product = models.Product.objects.create(name='Yam', category=self.category, 
+                                                     description='Beautiful and heavy', owner=self.user.id,
+                                                     price=200, quantity=7, active=False)
+        self.refresh = tokens.RefreshToken.for_user(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.refresh.access_token}')
+        
+    def test_product_list(self):
+        response = self.client.get(reverse('product-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+    def test_product_create(self):
+        data = {
+            'name': 'Ketchup',
+            'category': self.category,
+            'description': 'Very sweet', 
+            'owner': self.user.id,
+            'price': 500,
+            'quantity': 5,
+            'active': True,
+        }
+        
