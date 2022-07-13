@@ -20,20 +20,18 @@ class RegistrationTestCase(test.APITestCase):
 class LoginLogoutTestCase(test.APITestCase):
     
     def setUp(self):
-        self.user = User.objects.create(username='sirnusi',
+        self.user = User.objects.create_user(username='sirnusi',
                                         password='Newpassword123'
                                         )
-        
         self.refresh = tokens.RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(self.refresh.access_token))
-       
-
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.refresh.access_token}')
+   
+        
     def test_login(self):
         data = {
-            'username': 'sirnusi', 
-            'password': 'Newpassword123',
+            'username':'sirnusi',
+            'password': 'Newpassword123'
         }
-             
         response = self.client.post(reverse('token_obtain_pair'), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
