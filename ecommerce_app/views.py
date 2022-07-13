@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics, filters
+from rest_framework import generics, filters, views, response
 from . import models, serializers, pagination, permissions
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -73,3 +73,23 @@ class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
     permission_classes = [permissions.IsOnlyAdminUser]
+
+
+class CartListAV(generics.ListCreateAPIView):
+    queryset = models.Cart.objects.all()
+    serializer_class = serializers.CartSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class CartDetailAV(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = serializers.CartSerializer
+    
+    def get_queryset(self):
+        product = models.Product.objects.all()
+        
+    def perform_delete(self, serializer):
+        pk = self.kwargs.get(pk=pk)
+        owner = self.request.user
+        product = models.Product.objects.get(pk=pk)
+        
+        serializer.save(product=product, owner=owner)

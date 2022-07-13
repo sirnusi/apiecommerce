@@ -28,3 +28,7 @@ class CategoryTestCase(test.APITestCase):
     def test_category_delete(self):
         response = self.client.delete(reverse('category-detail', args=(self.category.id, )))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        
+
+class ProductTestCase(test.APITestCase):
+    pass
