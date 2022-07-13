@@ -20,3 +20,11 @@ class CategoryTestCase(test.APITestCase):
         }
         response = self.client.post(reverse('category-create'), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        
+    def test_category_ind(self):
+        response = self.client.put(reverse('category-detail', args=(self.category.id, )))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        
+    def test_category_delete(self):
+        response = self.client.delete(reverse('category-detail', args=(self.category.id, )))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
