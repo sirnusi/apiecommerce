@@ -34,6 +34,3 @@ class LoginLogoutTestCase(test.APITestCase):
         }
         response = self.client.post(reverse('token_obtain_pair'), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-    
-    # def test_refresh_token(self):
-        
