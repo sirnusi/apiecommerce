@@ -37,7 +37,7 @@ class ProductTestCase(test.APITestCase):
         self.user = User.objects.create_user(username='sirnusi', password='Newpassword123')
         self.category = models.Category.objects.create(name='Food')
         self.product = models.Product.objects.create(name='Yam', category=self.category, 
-                                                     description='Beautiful and heavy', owner=self.user.id,
+                                                     description='Beautiful and heavy', owner=self.user,
                                                      price=200, quantity=7, active=False)
         self.refresh = tokens.RefreshToken.for_user(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.refresh.access_token}')
@@ -57,4 +57,5 @@ class ProductTestCase(test.APITestCase):
             'active': True,
         }
         response = self.client.post(reverse('product-create'), data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
