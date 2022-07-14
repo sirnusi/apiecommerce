@@ -75,21 +75,22 @@ class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsOnlyAdminUser]
 
 
-class CartListAV(generics.ListCreateAPIView):
+class CartListAV(generics.ListAPIView):
+    serializer_class = serializers.CartSerializer
+    
+    def get_queryset(self):
+        owner = self.request.user
+        return models.Cart.objects.filter(owner=owner)
+
+
+class CartCreateAV(generics.CreateAPIView):
     queryset = models.Cart.objects.all()
     serializer_class = serializers.CartSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
 class CartDetailAV(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.Cart.objects.all()
     serializer_class = serializers.CartSerializer
-    
-    def get_queryset(self):
-        product = models.Product.objects.all()
+    permission_classes = [permissions.IsCartOwnerOnly]
         
-    def perform_delete(self, serializer):
-        pk = self.kwargs.get(pk=pk)
-        owner = self.request.user
-        product = models.Product.objects.get(pk=pk)
-        
-        serializer.save(product=product, owner=owner)

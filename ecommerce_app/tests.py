@@ -56,4 +56,5 @@ class ProductTestCase(test.APITestCase):
             'quantity': 5,
             'active': True,
         }
+        response = self.client.post(reverse('product-create'), data)
         
