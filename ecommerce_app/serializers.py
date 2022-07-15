@@ -2,11 +2,10 @@ from rest_framework import serializers
 from . import models
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = models.Product
-        exclude = ['owner']
+        fields = "__all__"
 
 
 class CategorySerializer(serializers.ModelSerializer):

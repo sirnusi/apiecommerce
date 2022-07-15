@@ -38,7 +38,7 @@ class ProductTestCase(test.APITestCase):
         self.category = models.Category.objects.create(name='Food')
         self.product = models.Product.objects.create(name='Yam', category=self.category, 
                                                      description='Beautiful and heavy', owner=self.user,
-                                                     price=200, quantity=7, active=False)
+                                                     price=200, image='./media/images/G.jpg/', quantity=7, active=False)
         self.refresh = tokens.RefreshToken.for_user(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.refresh.access_token}')
         
@@ -52,6 +52,7 @@ class ProductTestCase(test.APITestCase):
             'category': self.category,
             'description': 'Very sweet', 
             'owner': self.user.id,
+            'image': './media/images/GWAGON.jpg/',
             'price': 500,
             'quantity': 5,
             'active': True,
