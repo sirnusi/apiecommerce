@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics, filters, views, response
+from rest_framework import generics, filters, views, response, status, parsers
 from . import models, serializers, pagination, permissions
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -22,9 +22,15 @@ class ProductListAV(generics.ListAPIView):
 
 class ProductCreateAV(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
     
     def post(self, request):
-        pass
+        serializer = serializers.ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return response.Response(serializers.data, status=status.HTTP_201_CREATED)
+        else:
+            return response.Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
    
 class ProductDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Product.objects.all()
@@ -62,7 +68,12 @@ class ReviewCreateAV(generics.CreateAPIView):
     def perform_create(self, serializer):
         pk=self.kwargs.get('pk')
         owner = self.request.user
-        product = models.Product.objects.filter(pk=pk, owner=owner)
+        product = models.Product.objects.filter(pk=pk)
+        
+        review_set = models.Review.objects.filter(product=product, owner=owner)
+        
+        if review_set.exists():
+            raise serializers.ValidationError({'Error': 'You have rated this product'})
         
         serializer.save(owner=owner, product=product)
 
