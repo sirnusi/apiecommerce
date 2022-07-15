@@ -20,14 +20,11 @@ class ProductListAV(generics.ListAPIView):
         owner = self.request.user
         return models.Product.objects.filter(owner=owner)
 
-class ProductCreateAV(generics.CreateAPIView):
-    serializer_class = serializers.ProductSerializer
+class ProductCreateAV(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
     
-    def get_queryset(self):
-        return models.Product.objects.all()
-    
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    def post(self, request):
+        pass
    
 class ProductDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Product.objects.all()
@@ -64,10 +61,10 @@ class ReviewCreateAV(generics.CreateAPIView):
     
     def perform_create(self, serializer):
         pk=self.kwargs.get('pk')
-        customer = self.request.user
-        product = models.Product.objects.filter(pk=pk)
+        owner = self.request.user
+        product = models.Product.objects.filter(pk=pk, owner=owner)
         
-        return models.Review.objects.filter(product=product, customer=customer)
+        serializer.save(owner=owner, product=product)
 
 class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Review.objects.all()
@@ -89,8 +86,12 @@ class CartCreateAV(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class CartDetailAV(generics.RetrieveUpdateDestroyAPIView):
-    queryset = models.Cart.objects.all()
+class CartDetailAV(generics.DestroyAPIView):
     serializer_class = serializers.CartSerializer
     permission_classes = [permissions.IsCartOwnerOnly]
+    
+    def get_queryset(self):
+        pk= self.kwargs.get('pk')
+        return models.Product.objects.filter(pk=pk)
+    
         

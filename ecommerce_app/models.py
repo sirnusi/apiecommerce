@@ -2,6 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
     
+def upload_your_images(instance, filename):
+    
+    return f'images/{filename}'
+
     
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -21,7 +25,7 @@ class Product(models.Model):
     price = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField(default=1)
     active = models.BooleanField(default=False)
-    image = models.ImageField(upload_to='images')
+    image = models.ImageField(upload_to=upload_your_images, default='images/G.jpg')
     created = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
