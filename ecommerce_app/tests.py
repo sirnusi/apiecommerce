@@ -46,17 +46,20 @@ class ProductTestCase(test.APITestCase):
         response = self.client.get(reverse('product-list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
-    def test_product_create(self):
-        data = {
-            'name': 'Ketchup',
-            'category': self.category,
-            'description': 'Very sweet', 
-            'owner': self.user.id,
-            'image': './media/images/GWAGON.jpg/',
-            'price': 500,
-            'quantity': 5,
-            'active': True,
-        }
-        response = self.client.post(reverse('product-create'), data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        
+    # def test_product_create(self):
+    #     data = {
+    #         'name': 'Ketchup',
+    #         'category': self.category.id,
+    #         'description': 'Very sweet', 
+    #         'owner': self.user.id,
+    #         'image': './media/images/GWAGON.jpg/',
+    #         'price': 500,
+    #         'quantity': 5,
+    #         'active': True,
+    #     }
+    #     response = self.client.post(reverse('product-create'), data)
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    
+    def test_product_update(self):
+        response = self.client.put(reverse('product-detail', args=(self.product.id, )))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

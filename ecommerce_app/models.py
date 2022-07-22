@@ -49,7 +49,7 @@ class Review(models.Model):
     active = models.BooleanField(default=True)
     
     def __str__(self):
-        return str(self.rating) | self.product.name
+        return f"{self.rating} | {self.product.name}"
 
 # class ShippingAddress(models.Model):
 #     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL)
