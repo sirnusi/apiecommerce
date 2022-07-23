@@ -7,7 +7,6 @@ class ProductSerializer(serializers.ModelSerializer):
         model = models.Product
         fields = "__all__"
 
-
 class CategorySerializer(serializers.ModelSerializer):
     
     category = ProductSerializer(many=True, read_only=True)
@@ -18,15 +17,13 @@ class CategorySerializer(serializers.ModelSerializer):
         
 class ReviewSerializer(serializers.ModelSerializer):
     
-    product = ProductSerializer(many=True, read_only=True)
-    
+    owner = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = models.Review
-        fields = "__all__"
-        
-
+        exclude = ['product']
+        # fields = "__all__"
 class CartSerializer(serializers.ModelSerializer):
-    carts = ProductSerializer(many=True, read_only=True)
+    carts = ProductSerializer(read_only=True)
     
     class Meta:
         model = models.Cart

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, filters, views, response, status, parsers
+from rest_framework.serializers import ValidationError
 from . import models, serializers, pagination, permissions
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -18,26 +19,36 @@ class ProductListAV(generics.ListAPIView):
     
     def get_queryset(self):
         owner = self.request.user
+        if owner.is_authenticated == False:
+            raise ValidationError({'error':'Go login'})
         return models.Product.objects.filter(owner=owner)
 
-class ProductCreateAV(views.APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
-    
-    def post(self, request):
-        serializer = serializers.ProductSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return response.Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-   
-class ProductDetailAV(generics.RetrieveUpdateDestroyAPIView):
+class ProductCreateAV(generics.CreateAPIView):
     queryset = models.Product.objects.all()
     serializer_class = serializers.ProductSerializer
     permission_classes = [permissions.ProductOwnerOrReadOnly]
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
+     
+    def perform_create(self, serializer):
+        owner = self.request.user
+        if owner.is_authenticated != owner:
+            raise ValidationError({'Error':
+                'You are trying to create product using another user'})
+        serializer.save(owner=owner)     
     
-
+class ProductDetailAV(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = serializers.ProductSerializer
+    permission_classes = [permissions.ProductOwnerOrReadOnly]
+    
+    def get_queryset(self):
+        try:
+            pk= self.kwargs.get('pk')
+            product = models.Product.objects.get(pk=pk)
+        
+        except models.Product.DoesNotExist:
+            raise ValidationError('Error: No product with the pk {pk}'.format(pk=pk))
+        
+        
 class CategoryListAV(generics.ListAPIView):
     queryset = models.Category.objects.all()
     serializer_class = serializers.CategorySerializer
