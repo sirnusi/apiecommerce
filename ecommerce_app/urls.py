@@ -15,7 +15,7 @@ urlpatterns = [
     path('review/<int:pk>/details/', views.ReviewDetailAV.as_view(), name='review-details'),
     
     path('customer/cart/', views.CartListAV.as_view(), name='cart-list'),
-    path('customer/create/', views.CartCreateAV.as_view(), name='cart-create'),
+    path('customer/<int:pk>/create/', views.CartCreateAV.as_view(), name='cart-create'),
     
     #pk is the product in that cart you want to delete.
     path('customer/cart/<int:pk>/', views.CartDetailAV.as_view(), name='cart-detail'),

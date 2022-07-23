@@ -78,13 +78,14 @@ class ReviewCreateAV(generics.CreateAPIView):
     
     def perform_create(self, serializer):
         pk=self.kwargs.get('pk')
-        owner = self.request.user
-        product = models.Product.objects.filter(pk=pk)
         
+        product = models.Product.objects.get(pk=pk)
+        
+        owner = self.request.user
         review_set = models.Review.objects.filter(product=product, owner=owner)
         
         if review_set.exists():
-            raise serializers.ValidationError({'Error': 'You have rated this product'})
+            raise ValidationError({'Error': 'You have rated this product'})
         
         serializer.save(owner=owner, product=product)
 
@@ -105,15 +106,23 @@ class CartListAV(generics.ListAPIView):
 class CartCreateAV(generics.CreateAPIView):
     queryset = models.Cart.objects.all()
     serializer_class = serializers.CartSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.ProductOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        pk=self.kwargs.get('pk')
+        
+        product = models.Product.objects.get(pk=pk)
+        
+        owner = self.request.user
+        cart_set = models.Cart.objects.filter(product=product, owner=owner)
+        
+        
+        serializer.save(owner=owner, product=product)
 
 
 class CartDetailAV(generics.DestroyAPIView):
+    queryset = models.Cart.objects.all()
     serializer_class = serializers.CartSerializer
-    permission_classes = [permissions.IsCartOwnerOnly]
-    
-    def get_queryset(self):
-        pk= self.kwargs.get('pk')
-        return models.Product.objects.filter(pk=pk)
+    permission_classes = [permissions.IsAuthenticated]
     
         

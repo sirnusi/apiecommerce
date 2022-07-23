@@ -31,25 +31,26 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-class Cart(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='carts')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
-    created = models.DateTimeField(auto_now_add=True)
-    
-    def __str__(self):
-        return self.product.name
 
 
 class Review(models.Model):
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     description = models.CharField(max_length=500)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     active = models.BooleanField(default=True)
     
     def __str__(self):
         return f"{self.rating} | {self.product.name}"
+
+class Cart(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    created = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.product.name
 
 # class ShippingAddress(models.Model):
 #     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL)
